@@ -18,7 +18,7 @@ describe('KoaOAuthServer', function() {
   var app;
 
   beforeEach(function() {
-    app = koa();
+    app = new koa();
   });
 
   describe('authenticate()', function() {

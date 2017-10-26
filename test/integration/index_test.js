@@ -19,7 +19,7 @@ describe('KoaOAuthServer', function() {
   var app;
 
   beforeEach(function() {
-    app = koa();
+    app = new koa();
 
     app.use(bodyparser());
   });
