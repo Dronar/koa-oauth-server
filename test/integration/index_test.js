@@ -73,18 +73,22 @@ describe('KoaOAuthServer', function() {
         .end();
     });
 
-    it('should emit an error if `model` is empty', function *(done) {
+    it('should emit an error if `model` is empty', function (done) {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authenticate());
 
-      app.on('error', function() {
+      app.on('error', function() {});
+
+      request(app.listen())
+      .get('/')
+      .end( function (error) {
+        if( error) {
+          return done(error);
+        }
+
         done();
       });
-
-      yield request(app.listen())
-        .get('/')
-        .end();
     });
   });
 
@@ -148,18 +152,22 @@ describe('KoaOAuthServer', function() {
         .end();
     });
 
-    it('should emit an error if `model` is empty', function *(done) {
+    it('should emit an error if `model` is empty', function (done) {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authorize());
 
-      app.on('error', function() {
+      app.on('error', function() {});
+
+      request(app.listen())
+      .get('/')
+      .end( function (error) {
+        if( error) {
+          return done(error);
+        }
+
         done();
       });
-
-      yield request(app.listen())
-        .post('/')
-        .end();
     });
   });
 
@@ -221,18 +229,22 @@ describe('KoaOAuthServer', function() {
         .end();
     });
 
-    it('should emit an error if `model` is empty', function *(done) {
+    it('should emit an error if `model` is empty', function (done) {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.token());
 
-      app.on('error', function() {
+      app.on('error', function() {});
+
+      request(app.listen())
+      .get('/')
+      .end( function (error) {
+        if( error) {
+          return done(error);
+        }
+
         done();
       });
-
-      yield request(app.listen())
-        .post('/')
-        .end();
     });
   });
 });
