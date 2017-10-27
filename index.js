@@ -39,18 +39,20 @@ function KoaOAuthServer(options) {
 KoaOAuthServer.prototype.authenticate = function() {
   var server = this.server;
 
-  return function *(next) {
-    var request = new Request(this.request);
+  return async function (ctx, next) {
+    var request = new Request(ctx.request);
+    var response = new Response(ctx.response);
 
     try {
-      this.state.oauth = {
-        token: yield server.authenticate(request)
+      var token = await server.authenticate(request, response);
+      ctx.state.oauth = {
+        token: token
       };
     } catch (e) {
-      return handleError.call(this, e);
+      return handleError.call(ctx, e);
     }
 
-    yield* next;
+    return next();
   };
 };
 
@@ -65,21 +67,21 @@ KoaOAuthServer.prototype.authenticate = function() {
 KoaOAuthServer.prototype.authorize = function() {
   var server = this.server;
 
-  return function *(next) {
-    var request = new Request(this.request);
-    var response = new Response(this.response);
+  return async function (ctx, next) {
+    var request = new Request(ctx.request);
+    var response = new Response(ctx.response);
 
     try {
-      this.state.oauth = {
-        code: yield server.authorize(request, response)
+      var code = await server.authorize(request, response);
+      ctx.state.oauth = {
+        code: code
       };
 
-      handleResponse.call(this, response);
     } catch (e) {
-      return handleError.call(this, e, response);
+      return handleError.call(ctx, e);
     }
 
-    yield* next;
+    return next();
   };
 };
 
@@ -94,43 +96,30 @@ KoaOAuthServer.prototype.authorize = function() {
 KoaOAuthServer.prototype.token = function() {
   var server = this.server;
 
-  return function *(next) {
-    var request = new Request(this.request);
-    var response = new Response(this.response);
+  return async function (ctx, next) {
+    var request = new Request(ctx.request);
+    var response = new Response(ctx.response);
 
     try {
-      this.state.oauth = {
-        token: yield server.token(request, response)
+      var token = await server.token(request, response);
+      ctx.state.oauth = {
+        token: token
       };
 
-      handleResponse.call(this, response);
     } catch (e) {
-      return handleError.call(this, e, response);
+      return handleError.call(this, e);
     }
 
-    yield* next;
+    return next();
   };
 };
 
-/**
- * Handle response.
- */
-
-var handleResponse = function(response) {
-  this.body = response.body;
-  this.status = response.status;
-
-  this.set(response.headers);
-};
 
 /**
  * Handle error.
  */
 
-var handleError = function(e, response) {
-  if (response) {
-    this.set(response.headers);
-  }
+var handleError = function(e) {
 
   if (e instanceof UnauthorizedRequestError) {
     this.status = e.code;

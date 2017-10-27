@@ -22,61 +22,62 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('authenticate()', function() {
-    it('should call `authenticate()`', function *() {
+    it('should call `authenticate()`', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authenticate').returns({});
 
       app.use(oauth.authenticate());
 
-      yield request(app.listen())
+      request(app.listen())
         .get('/')
-        .end();
-
-      oauth.server.authenticate.callCount.should.equal(1);
-      oauth.server.authenticate.firstCall.args.should.have.length(1);
-      oauth.server.authenticate.firstCall.args[0].should.be.an.instanceOf(Request);
-      oauth.server.authenticate.restore();
+        .end(function () {
+          oauth.server.authenticate.callCount.should.equal(1);
+          oauth.server.authenticate.firstCall.args.should.have.length(2);
+          oauth.server.authenticate.firstCall.args[0].should.be.an.instanceOf(Request);
+          oauth.server.authenticate.firstCall.args[1].should.be.an.instanceOf(Response);
+          oauth.server.authenticate.restore();
+        });
     });
   });
 
   describe('authorize()', function() {
-    it('should call `authorize()`', function *() {
+    it('should call `authorize()`', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authorize').returns({});
 
       app.use(oauth.authorize());
 
-      yield request(app.listen())
+      request(app.listen())
         .get('/')
-        .end();
-
-      oauth.server.authorize.callCount.should.equal(1);
-      oauth.server.authorize.firstCall.args.should.have.length(2);
-      oauth.server.authorize.firstCall.args[0].should.be.an.instanceOf(Request);
-      oauth.server.authorize.firstCall.args[1].should.be.an.instanceOf(Response);
-      oauth.server.authorize.restore();
+        .end(function (){
+          oauth.server.authorize.callCount.should.equal(1);
+          oauth.server.authorize.firstCall.args.should.have.length(2);
+          oauth.server.authorize.firstCall.args[0].should.be.an.instanceOf(Request);
+          oauth.server.authorize.firstCall.args[1].should.be.an.instanceOf(Response);
+          oauth.server.authorize.restore();
+        });
     });
   });
 
   describe('token()', function() {
-    it('should call `token()`', function *() {
+    it('should call `token()`', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'token').returns({});
 
       app.use(oauth.token());
 
-      yield request(app.listen())
+      request(app.listen())
         .get('/')
-        .end();
-
-      oauth.server.token.callCount.should.equal(1);
-      oauth.server.token.firstCall.args.should.have.length(2);
-      oauth.server.token.firstCall.args[0].should.be.an.instanceOf(Request);
-      oauth.server.token.firstCall.args[1].should.be.an.instanceOf(Response);
-      oauth.server.token.restore();
+        .end(function () {
+          oauth.server.token.callCount.should.equal(1);
+          oauth.server.token.firstCall.args.should.have.length(2);
+          oauth.server.token.firstCall.args[0].should.be.an.instanceOf(Request);
+          oauth.server.token.firstCall.args[1].should.be.an.instanceOf(Response);
+          oauth.server.token.restore();
+        });
     });
   });
 });

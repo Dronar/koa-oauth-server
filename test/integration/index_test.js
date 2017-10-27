@@ -38,7 +38,7 @@ describe('KoaOAuthServer', function() {
 
     it('should wrap generator functions in the model', function() {
       var model = {
-        getAccessToken: function *() {
+        getAccessToken: function () {
           return 'foobar';
         }
       };
@@ -62,12 +62,12 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('authenticate()', function() {
-    it('should return an error if `model` is empty', function *() {
+    it('should return an error if `model` is empty', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authenticate());
 
-      yield request(app.listen())
+      request(app.listen())
         .get('/')
         .expect({ error: 'invalid_argument', error_description: 'Invalid argument: model does not implement `getAccessToken()`' })
         .end();
@@ -93,7 +93,7 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('authorize()', function() {
-    it('should return a `location` header with the error', function *() {
+    it('should return a `location` header with the error', function () {
       var model = {
         getAccessToken: function() {
           return { user: {} };
@@ -109,7 +109,7 @@ describe('KoaOAuthServer', function() {
 
       app.use(oauth.authorize());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/?state=foobiz')
         .set('Authorization', 'Bearer foobar')
         .send({ client_id: 12345 })
@@ -117,7 +117,7 @@ describe('KoaOAuthServer', function() {
         .end();
     });
 
-    it('should return a `location` header with the code', function *() {
+    it('should return a `location` header with the code', function () {
       var model = {
         getAccessToken: function() {
           return { user: {} };
@@ -133,7 +133,7 @@ describe('KoaOAuthServer', function() {
 
       app.use(oauth.authorize());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/?state=foobiz')
         .set('Authorization', 'Bearer foobar')
         .send({ client_id: 12345, response_type: 'code' })
@@ -141,12 +141,12 @@ describe('KoaOAuthServer', function() {
         .end();
     });
 
-    it('should return an error if `model` is empty', function *() {
+    it('should return an error if `model` is empty', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authorize());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/')
         .expect({ error: 'invalid_argument', error_description: 'Invalid argument: model does not implement `getClient()`' })
         .end();
@@ -172,7 +172,7 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('token()', function() {
-    it('should return an `access_token`', function *() {
+    it('should return an `access_token`', function () {
       var model = {
         getClient: function() {
           return { grants: ['password'] };
@@ -188,14 +188,14 @@ describe('KoaOAuthServer', function() {
 
       app.use(oauth.token());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/')
         .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
         .expect({ access_token: 'foobar', token_type: 'bearer' })
         .end();
     });
 
-    it('should return a `refresh_token`', function *() {
+    it('should return a `refresh_token`', function () {
       var model = {
         getClient: function() {
           return { grants: ['password'] };
@@ -211,19 +211,19 @@ describe('KoaOAuthServer', function() {
 
       app.use(oauth.token());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/')
         .send('client_id=foo&client_secret=bar&grant_type=password&username=qux&password=biz')
         .expect({ access_token: 'foobar', refresh_token: 'foobiz', token_type: 'bearer' })
         .end();
     });
 
-    it('should return an error if `model` is empty', function *() {
+    it('should return an error if `model` is empty', function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.token());
 
-      yield request(app.listen())
+      request(app.listen())
         .post('/')
         .expect({ error: 'invalid_argument', error_description: 'Invalid argument: model does not implement `getClient()`' })
         .end();
