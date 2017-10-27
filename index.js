@@ -3,12 +3,12 @@
  * Module dependencies.
  */
 
-var InvalidArgumentError = require('oauth2-server/lib/errors/invalid-argument-error');
-var NodeOAuthServer = require('oauth2-server');
-var Request = require('oauth2-server').Request;
-var Response = require('oauth2-server').Response;
-var UnauthorizedRequestError = require('oauth2-server/lib/errors/unauthorized-request-error');
-var co = require('co');
+const InvalidArgumentError = require('oauth2-server/lib/errors/invalid-argument-error');
+const NodeOAuthServer = require('oauth2-server');
+const Request = require('oauth2-server').Request;
+const Response = require('oauth2-server').Response;
+const UnauthorizedRequestError = require('oauth2-server/lib/errors/unauthorized-request-error');
+const co = require('co');
 
 /**
  * Constructor.
@@ -21,7 +21,7 @@ function KoaOAuthServer(options) {
     throw new InvalidArgumentError('Missing parameter: `model`');
   }
 
-  for (var fn in options.model) {
+  for (let fn in options.model) {
     options.model[fn] = co.wrap(options.model[fn]);
   }
 
@@ -37,14 +37,14 @@ function KoaOAuthServer(options) {
  */
 
 KoaOAuthServer.prototype.authenticate = function() {
-  var server = this.server;
+  const server = this.server;
 
   return async function (ctx, next) {
-    var request = new Request(ctx.request);
-    var response = new Response(ctx.response);
+    const request = new Request(ctx.request);
+    const response = new Response(ctx.response);
 
     try {
-      var token = await server.authenticate(request, response);
+      const token = await server.authenticate(request, response);
       ctx.state.oauth = {
         token: token
       };
@@ -65,14 +65,14 @@ KoaOAuthServer.prototype.authenticate = function() {
  */
 
 KoaOAuthServer.prototype.authorize = function() {
-  var server = this.server;
+  const server = this.server;
 
   return async function (ctx, next) {
-    var request = new Request(ctx.request);
-    var response = new Response(ctx.response);
+    const request = new Request(ctx.request);
+    const response = new Response(ctx.response);
 
     try {
-      var code = await server.authorize(request, response);
+      const code = await server.authorize(request, response);
       ctx.state.oauth = {
         code: code
       };
@@ -94,14 +94,14 @@ KoaOAuthServer.prototype.authorize = function() {
  */
 
 KoaOAuthServer.prototype.token = function() {
-  var server = this.server;
+  const server = this.server;
 
   return async function (ctx, next) {
-    var request = new Request(ctx.request);
-    var response = new Response(ctx.response);
+    const request = new Request(ctx.request);
+    const response = new Response(ctx.response);
 
     try {
-      var token = await server.token(request, response);
+      const token = await server.token(request, response);
       ctx.state.oauth = {
         token: token
       };
