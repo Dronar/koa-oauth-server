@@ -7,7 +7,7 @@ var KoaOAuthServer = require('../../');
 var Request = require('oauth2-server').Request;
 var Response = require('oauth2-server').Response;
 var koa = require('koa');
-var request = require('co-supertest');
+var request = require('supertest');
 var sinon = require('sinon');
 
 /**
@@ -22,16 +22,15 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('authenticate()', function() {
-    it('should call `authenticate()`', function () {
+    it('should call `authenticate()`', async function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authenticate').returns({});
 
       app.use(oauth.authenticate());
 
-      request(app.listen())
-        .get('/')
-        .end(function () {
+      await request(app.callback())
+        .get('/', function () {
           oauth.server.authenticate.callCount.should.equal(1);
           oauth.server.authenticate.firstCall.args.should.have.length(2);
           oauth.server.authenticate.firstCall.args[0].should.be.an.instanceOf(Request);
@@ -42,16 +41,15 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('authorize()', function() {
-    it('should call `authorize()`', function () {
+    it('should call `authorize()`', async function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authorize').returns({});
 
       app.use(oauth.authorize());
 
-      request(app.listen())
-        .get('/')
-        .end(function (){
+      await request(app.callback())
+        .get('/', function (){
           oauth.server.authorize.callCount.should.equal(1);
           oauth.server.authorize.firstCall.args.should.have.length(2);
           oauth.server.authorize.firstCall.args[0].should.be.an.instanceOf(Request);
@@ -62,16 +60,15 @@ describe('KoaOAuthServer', function() {
   });
 
   describe('token()', function() {
-    it('should call `token()`', function () {
+    it('should call `token()`', async function () {
       var oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'token').returns({});
 
       app.use(oauth.token());
 
-      request(app.listen())
-        .get('/')
-        .end(function () {
+      await request(app.callback())
+        .get('/', function () {
           oauth.server.token.callCount.should.equal(1);
           oauth.server.token.firstCall.args.should.have.length(2);
           oauth.server.token.firstCall.args[0].should.be.an.instanceOf(Request);
