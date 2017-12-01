@@ -3,20 +3,20 @@
  * Module dependencies.
  */
 
-var InvalidArgumentError = require('oauth2-server/lib/errors/invalid-argument-error');
-var KoaOAuthServer = require('../../');
-var NodeOAuthServer = require('oauth2-server');
-var bodyparser = require('koa-bodyparser');
-var koa = require('koa');
-var request = require('supertest');
-var should = require('should');
+const InvalidArgumentError = require('oauth2-server/lib/errors/invalid-argument-error');
+const KoaOAuthServer = require('../../');
+const NodeOAuthServer = require('oauth2-server');
+const bodyparser = require('koa-bodyparser');
+const koa = require('koa');
+const request = require('supertest');
+const should = require('should');
 
 /**
  * Test `KoaOAuthServer`.
  */
 
 describe('KoaOAuthServer', function() {
-  var app;
+  let app;
 
   beforeEach(function() {
     app = new koa();
@@ -38,7 +38,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should wrap generator functions in the model', function() {
-      var model = {
+      let model = {
         getAccessToken: function () {
           return 'foobar';
         }
@@ -56,7 +56,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should set the `server`', function() {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       oauth.server.should.be.an.instanceOf(NodeOAuthServer);
     });
@@ -64,7 +64,7 @@ describe('KoaOAuthServer', function() {
 
   describe('authenticate()', function() {
     it('should return an error if `model` is empty', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authenticate());
 
@@ -76,7 +76,7 @@ describe('KoaOAuthServer', function() {
 
   describe('authorize()', function() {
     it('should return an error if response_type is missing', async function () {
-      var model = {
+      let model = {
         getAccessToken: function() {
           return { user: {} };
         },
@@ -87,7 +87,7 @@ describe('KoaOAuthServer', function() {
           return {};
         }
       };
-      var oauth = new KoaOAuthServer({ model: model });
+      let oauth = new KoaOAuthServer({ model: model });
 
       app.use(oauth.authorize());
 
@@ -99,7 +99,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should return a `location` header with the code', async function() {
-      var model = {
+      let model = {
         getAccessToken: function() {
           return { user: {}};
         },
@@ -110,7 +110,7 @@ describe('KoaOAuthServer', function() {
           return { authorizationCode: 123 };
         }
       };
-      var oauth = new KoaOAuthServer({ model: model });
+      let oauth = new KoaOAuthServer({ model: model });
 
       app.use(oauth.authorize());
 
@@ -122,7 +122,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should return an error if `model` is empty', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authorize());      
 
@@ -132,7 +132,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should emit an error if `model` is empty', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.authorize());
 
@@ -144,7 +144,7 @@ describe('KoaOAuthServer', function() {
 
   describe('token()', function() {
     it('should return an `access_token`', async function () {
-      var model = {
+      let model = {
         getClient: function() {
           return { grants: ['password'] };
         },
@@ -155,7 +155,7 @@ describe('KoaOAuthServer', function() {
           return { accessToken: 'foobar', client: {}, user: {} };
         }
       };
-      var oauth = new KoaOAuthServer({ model: model });
+      let oauth = new KoaOAuthServer({ model: model });
 
       app.use(oauth.token());
 
@@ -166,7 +166,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should return a `refresh_token`', async function () {
-      var model = {
+      let model = {
         getClient: function() {
           return { grants: ['password'] };
         },
@@ -177,7 +177,7 @@ describe('KoaOAuthServer', function() {
           return { accessToken: 'foobar', client: {}, refreshToken: 'foobiz', user: {} };
         }
       };
-      var oauth = new KoaOAuthServer({ model: model });
+      let oauth = new KoaOAuthServer({ model: model });
 
       app.use(oauth.token());
 
@@ -188,7 +188,7 @@ describe('KoaOAuthServer', function() {
     });
 
     it('should return an error if `model` is empty', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       app.use(oauth.token());
 

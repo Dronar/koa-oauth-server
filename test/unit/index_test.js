@@ -3,19 +3,19 @@
  * Module dependencies.
  */
 
-var KoaOAuthServer = require('../../');
-var Request = require('oauth2-server').Request;
-var Response = require('oauth2-server').Response;
-var koa = require('koa');
-var request = require('supertest');
-var sinon = require('sinon');
+const KoaOAuthServer = require('../../');
+const Request = require('oauth2-server').Request;
+const Response = require('oauth2-server').Response;
+const koa = require('koa');
+const request = require('supertest');
+const sinon = require('sinon');
 
 /**
  * Test `KoaOAuthServer`.
  */
 
 describe('KoaOAuthServer', function() {
-  var app;
+  let app;
 
   beforeEach(function() {
     app = new koa();
@@ -23,7 +23,7 @@ describe('KoaOAuthServer', function() {
 
   describe('authenticate()', function() {
     it('should call `authenticate()`', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authenticate').returns({});
 
@@ -42,7 +42,7 @@ describe('KoaOAuthServer', function() {
 
   describe('authorize()', function() {
     it('should call `authorize()`', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'authorize').returns({});
 
@@ -61,7 +61,7 @@ describe('KoaOAuthServer', function() {
 
   describe('token()', function() {
     it('should call `token()`', async function () {
-      var oauth = new KoaOAuthServer({ model: {} });
+      let oauth = new KoaOAuthServer({ model: {} });
 
       sinon.stub(oauth.server, 'token').returns({});
 
