@@ -49,7 +49,7 @@ KoaOAuthServer.prototype.authenticate = function() {
         token: token
       };
     } catch (e) {
-      return handleError.call(ctx, e);
+      return handleError(ctx, e);
     }
 
     return next();
@@ -76,9 +76,12 @@ KoaOAuthServer.prototype.authorize = function() {
       ctx.state.oauth = {
         code: code
       };
+      ctx.body = response.body;
+      ctx.status = response.status;
 
+      ctx.set(response.headers);
     } catch (e) {
-      return handleError.call(ctx, e);
+      return handleError(ctx, e);
     }
 
     return next();
@@ -105,30 +108,36 @@ KoaOAuthServer.prototype.token = function() {
       ctx.state.oauth = {
         token: token
       };
-
+      if (response.status === 302) {
+        let location = response.headers.location;
+        delete response.headers.location;
+        ctx.set(response.headers);
+        ctx.redirect(location);
+      } else {
+        ctx.status = response.status;
+        ctx.body = response.body;
+        ctx.set(response.headers);
+      }
     } catch (e) {
-      return handleError.call(this, e);
+      return handleError(ctx, e);
     }
 
     return next();
   };
 };
 
-
 /**
  * Handle error.
  */
 
-var handleError = function(e) {
-
+var handleError = function(ctx, e) {
   if (e instanceof UnauthorizedRequestError) {
-    this.status = e.code;
+    ctx.status = e.code;
   } else {
-    this.body = { error: e.name, error_description: e.message };
-    this.status = e.code;
+    ctx.body = { error: e.name, error_description: e.message };
+    ctx.status = e.code;
   }
-
-  return this.app.emit('error', e, this);
+  return ctx.app.emit('error', e, this);
 };
 
 /**
