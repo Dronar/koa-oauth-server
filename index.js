@@ -137,7 +137,7 @@ var handleError = function(ctx, e) {
     ctx.body = { error: e.name, error_description: e.message };
     ctx.status = e.code;
   }
-  return ctx.app.emit('error', e, this);
+  return ctx.app.emit('error', e, ctx);
 };
 
 /**
