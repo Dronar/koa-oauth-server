@@ -22,7 +22,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "co": "^4.5.1",
     "oauth2-server": "^3.0.0"
   },
   "devDependencies": {

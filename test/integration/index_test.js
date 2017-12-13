@@ -37,24 +37,6 @@ describe('KoaOAuthServer', function() {
       }
     });
 
-    it('should wrap generator functions in the model', function() {
-      let model = {
-        getAccessToken: function () {
-          return 'foobar';
-        }
-      };
-
-      new KoaOAuthServer({ model: model });
-
-      model.getAccessToken().should.be.an.instanceOf(Promise);
-
-      return model.getAccessToken()
-        .then(function(data) {
-          data.should.equal('foobar');
-        })
-        .catch(should.fail);
-    });
-
     it('should set the `server`', function() {
       let oauth = new KoaOAuthServer({ model: {} });
 

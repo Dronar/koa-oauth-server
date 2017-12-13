@@ -8,7 +8,6 @@ const NodeOAuthServer = require('oauth2-server');
 const Request = require('oauth2-server').Request;
 const Response = require('oauth2-server').Response;
 const UnauthorizedRequestError = require('oauth2-server/lib/errors/unauthorized-request-error');
-const co = require('co');
 
 /**
  * Constructor.
@@ -19,10 +18,6 @@ function KoaOAuthServer(options) {
 
   if (!options.model) {
     throw new InvalidArgumentError('Missing parameter: `model`');
-  }
-
-  for (let fn in options.model) {
-    options.model[fn] = co.wrap(options.model[fn]);
   }
 
   this.server = new NodeOAuthServer(options);
