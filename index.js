@@ -127,12 +127,12 @@ KoaOAuthServer.prototype.token = function() {
 
 var handleError = function(ctx, e) {
   if (e instanceof UnauthorizedRequestError) {
+    ctx.body = '';
     ctx.status = e.code;
   } else {
     ctx.body = { error: e.name, error_description: e.message };
     ctx.status = e.code;
   }
-  return ctx.app.emit('error', e, ctx);
 };
 
 /**
