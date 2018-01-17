@@ -59,7 +59,7 @@ KoaOAuthServer.prototype.authenticate = function() {
  * (See: https://tools.ietf.org/html/rfc6749#section-3.1)
  */
 
-KoaOAuthServer.prototype.authorize = function() {
+KoaOAuthServer.prototype.authorize = function(options) {
   const server = this.server;
 
   return async function (ctx, next) {
@@ -67,7 +67,7 @@ KoaOAuthServer.prototype.authorize = function() {
     const response = new Response(ctx.response);
 
     try {
-      const code = await server.authorize(request, response);
+      const code = await server.authorize(request, response, options);
       ctx.state.oauth = {
         code: code
       };
